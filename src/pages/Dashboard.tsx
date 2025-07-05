@@ -110,19 +110,19 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-accent/20 to-primary/5">
+    <div className="min-h-screen bg-gradient-to-br from-background via-gradient-cyber to-primary/10">
       <div className="container mx-auto px-4 py-6">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div className="flex items-center space-x-3">
-            <Button variant="ghost" size="sm" onClick={() => navigate('/')}>
+            <Button variant="ghost" size="sm" onClick={() => navigate('/')} className="hover:bg-gradient-cyber">
               <Home className="w-4 h-4" />
             </Button>
-            <div className="bg-gradient-primary p-2 rounded-lg shadow-primary">
+            <div className="bg-gradient-primary p-2 rounded-lg shadow-neon border border-primary/30">
               <QrCode className="w-6 h-6 text-primary-foreground" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold">Dashboard</h1>
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">Dashboard</h1>
               <p className="text-muted-foreground">
                 {getGreeting()}, {merchantData.businessName}
               </p>
@@ -135,7 +135,7 @@ const Dashboard = () => {
         </div>
 
         {/* Profile Info Card */}
-        <Card className="mb-6 bg-gradient-card shadow-soft">
+        <Card className="mb-6 bg-gradient-card shadow-neon border border-border/50">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div className="space-y-2">
@@ -147,7 +147,7 @@ const Dashboard = () => {
                   <p>Currency: {merchantData.currency}</p>
                 </div>
               </div>
-              <div className="bg-primary/10 p-3 rounded-lg">
+              <div className="bg-gradient-cyber p-3 rounded-lg border border-accent/30">
                 <User className="w-8 h-8 text-primary" />
               </div>
             </div>
@@ -155,7 +155,7 @@ const Dashboard = () => {
         </Card>
 
         {/* Balance Card */}
-        <Card className="mb-6 bg-gradient-primary text-primary-foreground shadow-primary">
+        <Card className="mb-6 bg-gradient-primary text-primary-foreground shadow-neon border border-primary/30">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -164,7 +164,7 @@ const Dashboard = () => {
                   {formatCurrency(merchantData.balance, merchantData.currency)}
                 </p>
               </div>
-              <div className="bg-white/20 p-3 rounded-lg">
+              <div className="bg-white/20 p-3 rounded-lg border border-white/30">
                 <DollarSign className="w-8 h-8 text-primary-foreground" />
               </div>
             </div>
@@ -173,10 +173,10 @@ const Dashboard = () => {
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          <Card className="bg-gradient-card hover:shadow-soft transition-all duration-300 cursor-pointer" 
+          <Card className="bg-gradient-card hover:shadow-neon border border-border/50 transition-glow duration-300 cursor-pointer" 
                 onClick={() => setShowQRGenerator(true)}>
             <CardContent className="p-6 text-center">
-              <div className="bg-primary/10 p-4 rounded-full w-fit mx-auto mb-4">
+              <div className="bg-gradient-cyber p-4 rounded-full w-fit mx-auto mb-4 border border-primary/30">
                 <QrCode className="w-8 h-8 text-primary" />
               </div>
               <h3 className="font-semibold mb-2">Create QR Code</h3>
@@ -184,10 +184,10 @@ const Dashboard = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-card hover:shadow-soft transition-all duration-300 cursor-pointer"
+          <Card className="bg-gradient-card hover:shadow-neon border border-border/50 transition-glow duration-300 cursor-pointer"
                 onClick={handleViewTransactions}>
             <CardContent className="p-6 text-center">
-              <div className="bg-success/10 p-4 rounded-full w-fit mx-auto mb-4">
+              <div className="bg-gradient-success/20 p-4 rounded-full w-fit mx-auto mb-4 border border-success/30">
                 <History className="w-8 h-8 text-success" />
               </div>
               <h3 className="font-semibold mb-2">Transaction History</h3>
@@ -195,10 +195,10 @@ const Dashboard = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-card hover:shadow-soft transition-all duration-300">
+          <Card className="bg-gradient-card hover:shadow-neon border border-border/50 transition-glow duration-300">
             <CardContent className="p-6 text-center">
-              <div className="bg-success/10 p-4 rounded-full w-fit mx-auto mb-4">
-                <User className="w-8 h-8 text-success" />
+              <div className="bg-gradient-secondary/20 p-4 rounded-full w-fit mx-auto mb-4 border border-neon-purple/30">
+                <User className="w-8 h-8 text-neon-purple" />
               </div>
               <h3 className="font-semibold mb-2">Profile Settings</h3>
               <p className="text-sm text-muted-foreground">Manage your account</p>
@@ -207,11 +207,11 @@ const Dashboard = () => {
         </div>
 
         {/* Recent Transactions */}
-        <Card className="bg-gradient-card">
+        <Card className="bg-gradient-card shadow-neon border border-border/50">
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
-                <div className="bg-primary/10 p-2 rounded-lg">
+                <div className="bg-gradient-cyber p-2 rounded-lg border border-primary/30">
                   <DollarSign className="w-4 h-4 text-primary" />
                 </div>
                 <span>Recent Transactions</span>
@@ -226,10 +226,12 @@ const Dashboard = () => {
             {merchantData.transactions && merchantData.transactions.length > 0 ? (
               <div className="space-y-4">
                 {merchantData.transactions.slice(0, 5).map((transaction) => (
-                  <div key={transaction.id} className="flex justify-between items-center p-3 rounded-lg bg-muted/50">
+                  <div key={transaction.id} className="flex justify-between items-center p-3 rounded-lg bg-gradient-cyber border border-accent/30">
                     <div className="flex items-center space-x-3">
-                      <div className={`p-2 rounded-lg ${
-                        transaction.type === 'credit' ? 'bg-success/10' : 'bg-destructive/10'
+                      <div className={`p-2 rounded-lg border ${
+                        transaction.type === 'credit' 
+                          ? 'bg-gradient-success/20 border-success/30' 
+                          : 'bg-destructive/20 border-destructive/30'
                       }`}>
                         <DollarSign className={`w-4 h-4 ${
                           transaction.type === 'credit' ? 'text-success' : 'text-destructive'
@@ -256,7 +258,7 @@ const Dashboard = () => {
               </div>
             ) : (
               <div className="text-center py-8">
-                <div className="bg-muted/50 p-4 rounded-full w-fit mx-auto mb-4">
+                <div className="bg-gradient-cyber p-4 rounded-full w-fit mx-auto mb-4 border border-accent/30">
                   <DollarSign className="w-8 h-8 text-muted-foreground" />
                 </div>
                 <p className="text-muted-foreground font-medium">No transactions yet</p>

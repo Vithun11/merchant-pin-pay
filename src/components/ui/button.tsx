@@ -9,15 +9,15 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-gradient-primary text-primary-foreground hover:shadow-primary transform hover:scale-[1.02] active:scale-[0.98]",
-        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-        outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
-        success: "bg-gradient-success text-success-foreground hover:shadow-soft transform hover:scale-[1.02] active:scale-[0.98]",
-        fintech: "bg-gradient-primary text-primary-foreground border border-primary-glow/20 hover:shadow-primary transform hover:scale-[1.02] active:scale-[0.98] hover:border-primary-glow/40",
-        card: "bg-gradient-card text-card-foreground border border-border hover:shadow-soft transform hover:scale-[1.01] active:scale-[0.99]"
+        default: "bg-gradient-primary text-primary-foreground hover:shadow-neon transform hover:scale-[1.02] active:scale-[0.98] border border-primary/20 hover:border-primary/40 transition-glow",
+        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90 border border-destructive/30 hover:shadow-[0_0_20px_hsl(var(--destructive)/0.4)]",
+        outline: "border border-border bg-gradient-cyber hover:bg-gradient-primary hover:text-primary-foreground hover:border-primary/50 hover:shadow-neon transition-glow",
+        secondary: "bg-gradient-secondary text-secondary-foreground hover:shadow-purple transform hover:scale-[1.02] active:scale-[0.98] border border-neon-purple/20 hover:border-neon-purple/40 transition-glow",
+        ghost: "hover:bg-gradient-cyber hover:text-accent-foreground transition-glow",
+        link: "text-primary underline-offset-4 hover:underline hover:text-primary-glow transition-glow",
+        success: "bg-gradient-success text-success-foreground hover:shadow-[0_0_20px_hsl(var(--success)/0.4)] transform hover:scale-[1.02] active:scale-[0.98] border border-success/30 transition-glow",
+        fintech: "bg-gradient-primary text-primary-foreground border border-primary/30 hover:shadow-neon transform hover:scale-[1.02] active:scale-[0.98] hover:border-primary/50 transition-glow",
+        card: "bg-gradient-card text-card-foreground border border-border/50 hover:shadow-soft hover:border-accent/50 transform hover:scale-[1.01] active:scale-[0.99] transition-glow"
       },
       size: {
         default: "h-11 px-6 py-2.5",

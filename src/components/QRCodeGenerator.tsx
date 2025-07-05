@@ -102,16 +102,16 @@ const QRCodeGenerator = ({ onClose, merchantData }: QRCodeGeneratorProps) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-      <Card className="w-full max-w-md bg-gradient-card shadow-primary">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+      <Card className="w-full max-w-md bg-gradient-card shadow-neon border border-border/50">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
           <CardTitle className="flex items-center space-x-2">
-            <div className="bg-gradient-primary p-2 rounded-lg shadow-primary">
+            <div className="bg-gradient-primary p-2 rounded-lg shadow-neon border border-primary/30">
               <QrCode className="w-4 h-4 text-primary-foreground" />
             </div>
-            <span>Generate QR Code</span>
+            <span className="bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">Generate QR Code</span>
           </CardTitle>
-          <Button variant="ghost" size="sm" onClick={onClose}>
+          <Button variant="ghost" size="sm" onClick={onClose} className="hover:bg-gradient-cyber">
             <X className="w-4 h-4" />
           </Button>
         </CardHeader>
@@ -126,7 +126,7 @@ const QRCodeGenerator = ({ onClose, merchantData }: QRCodeGeneratorProps) => {
                 placeholder="0"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                className="pl-8 text-lg h-12"
+                className="pl-8 text-lg h-12 bg-gradient-cyber border-accent/30 text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:shadow-neon transition-glow"
                 min="1"
                 step="0.01"
               />
@@ -157,15 +157,15 @@ const QRCodeGenerator = ({ onClose, merchantData }: QRCodeGeneratorProps) => {
 
           {qrCodeUrl && (
             <div className="space-y-4">
-              <div className="bg-white p-6 rounded-xl border border-border/50 text-center">
+              <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-border/50 text-center shadow-neon">
                 <img 
                   src={qrCodeUrl} 
                   alt="Payment QR Code" 
-                  className="mx-auto mb-4"
+                  className="mx-auto mb-4 rounded-lg border border-primary/20"
                 />
                 <div className="space-y-1">
                   <p className="font-semibold text-foreground">{merchantData.businessName}</p>
-                  <p className="text-2xl font-bold text-primary">{formatCurrency(amount)}</p>
+                  <p className="text-2xl font-bold bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">{formatCurrency(amount)}</p>
                   <p className="text-sm text-muted-foreground">Scan to pay</p>
                 </div>
               </div>

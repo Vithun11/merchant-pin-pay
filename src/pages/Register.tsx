@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { QrCode, Check, Clock, Phone, Mail, Home } from "lucide-react";
 import { ProgressSteps } from "@/components/ui/progress-steps";
 import { NumberPad } from "@/components/ui/number-pad";
+import { Keyboard } from "@/components/ui/keyboard";
 import { CountrySelector } from "@/components/ui/country-selector";
 import { CurrencySelector } from "@/components/ui/currency-selector";
 import { generateUniqueId } from "@/utils/generateId";
@@ -31,6 +32,7 @@ const Register = () => {
   const [resendTimer, setResendTimer] = useState(0);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showNumberPad, setShowNumberPad] = useState(false);
+  const [showKeyboard, setShowKeyboard] = useState(false);
   const [currentPinField, setCurrentPinField] = useState<'pin' | 'confirmPin'>('pin');
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -114,8 +116,25 @@ const Register = () => {
         });
         return;
       }
-      // Create account
+      // Create account with realistic simulation
       const uniqueId = generateUniqueId();
+      const initialTransactions = [
+        {
+          id: 'TX' + Date.now() + '001',
+          amount: 1000,
+          date: new Date(Date.now() - 86400000).toLocaleDateString(),
+          type: 'credit' as const,
+          description: 'Welcome Bonus'
+        },
+        {
+          id: 'TX' + Date.now() + '002', 
+          amount: 250,
+          date: new Date(Date.now() - 172800000).toLocaleDateString(),
+          type: 'credit' as const,
+          description: 'QR Payment Received'
+        }
+      ];
+      
       localStorage.setItem('merchantData', JSON.stringify({
         id: uniqueId,
         businessName: formData.businessName,
@@ -124,9 +143,11 @@ const Register = () => {
         phone: formData.phone,
         pin: formData.pin,
         currency: formData.currency,
-        balance: 0,
+        balance: 1250, // Sum of initial transactions
         isLoggedIn: true,
-        transactions: []
+        transactions: initialTransactions,
+        createdAt: new Date().toISOString(),
+        lastLogin: new Date().toISOString()
       }));
       setShowSuccess(true);
       setTimeout(() => {
@@ -178,18 +199,34 @@ const Register = () => {
     }
   };
 
+  const handleKeyPress = (key: string) => {
+    setFormData({...formData, businessName: formData.businessName + key});
+  };
+
+  const handleSpace = () => {
+    setFormData({...formData, businessName: formData.businessName + ' '});
+  };
+
+  const handleKeyboardBackspace = () => {
+    setFormData({...formData, businessName: formData.businessName.slice(0, -1)});
+  };
+
+  const handleKeyboardClear = () => {
+    setFormData({...formData, businessName: ''});
+  };
+
   if (showSuccess) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-accent/20 to-primary/5 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md bg-gradient-card shadow-soft">
+        <Card className="w-full max-w-md bg-gradient-card shadow-neon border border-border/50">
           <CardContent className="p-8 text-center space-y-6">
             <div className="flex justify-center">
-              <div className="bg-success p-4 rounded-full">
+              <div className="bg-gradient-success p-4 rounded-full shadow-[0_0_20px_hsl(var(--success)/0.4)] border border-success/30">
                 <Check className="w-8 h-8 text-success-foreground" />
               </div>
             </div>
             <div className="space-y-2">
-              <h2 className="text-2xl font-bold text-success">Account Created!</h2>
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-success to-[hsl(142_100%_60%)] bg-clip-text text-transparent">Account Created!</h2>
               <p className="text-muted-foreground">
                 Welcome to MerchantPay, {formData.businessName}!
               </p>
@@ -212,20 +249,20 @@ const Register = () => {
           stepLabels={stepLabels} 
         />
         
-        <Card className="bg-gradient-card shadow-soft">
+        <Card className="bg-gradient-card shadow-neon border border-border/50">
           <CardHeader className="text-center space-y-4">
             <div className="flex justify-between items-center">
-              <Button variant="ghost" size="sm" onClick={() => navigate('/')}>
+              <Button variant="ghost" size="sm" onClick={() => navigate('/')} className="hover:bg-gradient-cyber">
                 <Home className="w-4 h-4" />
               </Button>
-              <div className="bg-gradient-primary p-3 rounded-xl shadow-primary">
+              <div className="bg-gradient-primary p-3 rounded-xl shadow-neon border border-primary/30">
                 {step <= 2 && <Mail className="w-6 h-6 text-primary-foreground" />}
                 {step === 3 || step === 4 ? <Phone className="w-6 h-6 text-primary-foreground" /> : null}
                 {step === 5 && <QrCode className="w-6 h-6 text-primary-foreground" />}
               </div>
               <div></div>
             </div>
-            <CardTitle className="text-2xl font-bold">
+            <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
               {step === 1 && "Business Details"}
               {step === 2 && "Verify Email"}
               {step === 3 && "Phone Number"}
@@ -245,7 +282,18 @@ const Register = () => {
                     placeholder="Enter your business name"
                     value={formData.businessName}
                     onChange={(e) => setFormData({...formData, businessName: e.target.value})}
+                    className="bg-gradient-cyber border-accent/30 text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:shadow-neon transition-glow"
                   />
+                  <div className="flex justify-center">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setShowKeyboard(!showKeyboard)}
+                      className="text-xs"
+                    >
+                      {showKeyboard ? "Hide" : "Show"} Keyboard
+                    </Button>
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="email">Email Address *</Label>
@@ -255,6 +303,7 @@ const Register = () => {
                     placeholder="Enter your email address"
                     value={formData.email}
                     onChange={(e) => setFormData({...formData, email: e.target.value})}
+                    className="bg-gradient-cyber border-accent/30 text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:shadow-neon transition-glow"
                   />
                 </div>
                 <div className="space-y-2">
@@ -264,6 +313,16 @@ const Register = () => {
                     onValueChange={(value) => setFormData({...formData, currency: value})}
                   />
                 </div>
+                
+                {showKeyboard && step === 1 && (
+                  <Keyboard
+                    onKeyPress={handleKeyPress}
+                    onBackspace={handleKeyboardBackspace}
+                    onSpace={handleSpace}
+                    onClear={handleKeyboardClear}
+                    layout="qwerty"
+                  />
+                )}
               </div>
             )}
 
@@ -316,6 +375,7 @@ const Register = () => {
                     placeholder="Enter your phone number"
                     value={formData.phone}
                     onChange={(e) => setFormData({...formData, phone: e.target.value.replace(/\D/g, '')})}
+                    className="bg-gradient-cyber border-accent/30 text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:shadow-neon transition-glow"
                   />
                 </div>
               </div>
@@ -334,7 +394,7 @@ const Register = () => {
                     type="text"
                     placeholder="000000"
                     maxLength={6}
-                    className="text-center text-2xl tracking-widest h-14"
+                    className="text-center text-2xl tracking-widest h-14 bg-gradient-cyber border-accent/30 text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:shadow-neon transition-glow"
                     value={formData.otp}
                     onChange={(e) => setFormData({...formData, otp: e.target.value.replace(/\D/g, '')})}
                   />
@@ -371,7 +431,7 @@ const Register = () => {
                       type="password"
                       placeholder="000000"
                       maxLength={6}
-                      className="text-center text-2xl tracking-widest h-14"
+                      className="text-center text-2xl tracking-widest h-14 bg-gradient-cyber border-accent/30 text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:shadow-neon transition-glow"
                       value={formData.pin}
                       onChange={(e) => setFormData({...formData, pin: e.target.value.replace(/\D/g, '')})}
                       onFocus={() => setCurrentPinField('pin')}
@@ -383,7 +443,7 @@ const Register = () => {
                       type="password"
                       placeholder="000000"
                       maxLength={6}
-                      className="text-center text-2xl tracking-widest h-14"
+                      className="text-center text-2xl tracking-widest h-14 bg-gradient-cyber border-accent/30 text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:shadow-neon transition-glow"
                       value={formData.confirmPin}
                       onChange={(e) => setFormData({...formData, confirmPin: e.target.value.replace(/\D/g, '')})}
                       onFocus={() => setCurrentPinField('confirmPin')}
